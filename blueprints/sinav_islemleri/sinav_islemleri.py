@@ -72,3 +72,41 @@ def sinav_takvimi_ogretmen():
             return redirect(url_for('giris-ekrani.login'))
     else:
         return redirect(url_for('giris-ekrani.login'))
+
+
+# @sinav_islemleri_blueprint.route('/sinav-notlari-giris',methods=['GET','POST'])
+# def sinav_not_giris_ogretmen():
+#     token = request.args.get('token')
+#
+#     if token:
+#         try:
+#             decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+#             user_name = decoded_token['user_name']
+#             user = OgretimElemani.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+#             simdi = datetime.now()
+#             # Yılı al
+#             suanki_yil = simdi.year
+#             donem = f"{suanki_yil}-{suanki_yil + 1}"
+#
+#
+#             if redirect_user(decoded_token.get('user_type'), 'ogretim elemani'):
+#                 # exams = Sinav.query.join(DersAcma).filter(Sinav.OgrElmID == user.OgrElmID).all()
+#                 if request.method == 'POST':
+#
+#                     return render_template(
+#                         'sinav_islemleri/sinav_takvimi_ogretmen.html',
+#                         user=user,
+#                         token=token,
+#                         decoded_token=decoded_token, exams=active_semester_exams
+#
+#                     )
+#             else:
+#                 return redirect(url_for('giris-ekrani.login'))
+#         except jwt.ExpiredSignatureError:
+#             # Token süresi dolmuş
+#             return redirect(url_for('giris-ekrani.login'))
+#         except jwt.InvalidTokenError:
+#             # Geçersiz token
+#             return redirect(url_for('giris-ekrani.login'))
+#     else:
+#         return redirect(url_for('giris-ekrani.login'))

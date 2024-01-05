@@ -182,6 +182,9 @@ sex = {"M": "Erkek", "F": "Kadın"}
 #             pass
 
 with app.app_context():
+
+
+
     # Örnek Derslik verileri
     # derslik1 = Derslik(DerslikAdi='101', DerslikTuru='Amfi', Kapasite=100)
     # derslik2 = Derslik(DerslikAdi='202', DerslikTuru='Laboratuvar', Kapasite=30)

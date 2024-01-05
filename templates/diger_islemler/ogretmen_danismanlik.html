@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript" src="/static/js/jquery-3.6.4.min.js"></script>
+<!-- DataTables Local Files -->
+<script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="/static/css/jquery.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<!-- DataTables Local Files -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.css') }}">
+<script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/jquery.dataTables.js') }}"></script>
+<!-- DataTables Buttons CDN -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.noConflict();
+        var table = $('#ogrenciDanismanlikTablosu').DataTable();
+    });
+       $(document).ready(function() {
+          $('#ogrenciDanismanlikTablosu').DataTable({
+              "dom": '<"top"Blf>rt<"bottom"ip><"clear">',
+             "paging": true,
+             "ordering": true,
+             "searching": true,
+              "bDestroy": true,
+              "language": {
+                 "paginate": {
+          "previous": "Önceki",
+          "next": "Sonraki"
+        },
+                 "search": "Ara:",
+        "lengthMenu": "Sayfada _MENU_ kayıt göster",
+        "zeroRecords": "Hiçbir sonuç bulunamadı.",
+        "info": "Sayfa _PAGE_ / _PAGES_ gösteriliyor",
+        "infoEmpty": "Kayıt bulunmuyor",
+        "infoFiltered": "(_MAX_ toplam kayıttan süzüldü)"
+      },
+              "buttons": [
+            {
+              extend: 'copy',
+              text: 'Kopyala',
+
+            },
+            {
+              extend: 'excel',
+              text: 'Excel\'e Aktar',
+
+            },
+            {
+              extend: 'pdf',
+              text: 'PDF\'e Aktar',
+
+            }
+          ],
+
+          });
+       });
+
+
+
+</script>
+<div class="container mt-5">
+    <h1 class="mb-4">Öğretim Elemanı Danışmanlık Bilgileri</h1>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ogrenciEkleModal">Öğrenci
+        Ekle
+        </button>
+    <div class="table-responsive">
+
+        <table class="table table-hover" id="ogrenciDanismanlikTablosu">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Öğrenci Adı</th>
+            <th>Öğrenci Soyadı</th>
+            <th>Öğrenci No</th>
+            <th>Öğrenci Bölümü</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+{#        {% for danismanlik in ogrenci_listesi %}#}
+{#        <tr>#}
+{#            <td>{{ loop.index }}</td>#}
+{#            <td>{{ danismanlik[1] }}</td>#}
+{#            <td>{{ danismanlik[2] }}</td>#}
+{#            <td>{{ danismanlik[3] }}</td>#}
+{#            <td>{{ danismanlik[4] }}</td>#}
+{##}
+{#            <td class="d-flex">#}
+{#                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#silModal{{ danismanlik[0] }}">Sil</a>#}
+{#            </td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+    {% for ogrenci in range(adet) %}
+     <tr>
+            <td>{{ ogrenci + 1 }}</td>
+            <td>{{ ogrenci_listesi[ogrenci].Adi }}</td>
+            <td>{{ ogrenci_listesi[ogrenci].Soyadi }}</td>
+            <td>{{ ogrenci_listesi[ogrenci].OgrenciNo }}</td>
+            <td>{{ bolum_listesi[ogrenci].BolumAdi }}</td>
+
+            <td class="d-flex">
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#silModal{{ ogrenci_listesi[ogrenci].OgrenciID }}">Sil</a>
+            </td>
+        </tr>
+
+    <div class="modal fade" id="silModal{{ ogrenci_listesi[ogrenci].OgrenciID }}" tabindex="-1"
+                    role="dialog" aria-labelledby="silModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="silModalLabel">Öğrenciyi Sil</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Emin misiniz? Bu işlem geri alınamaz!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                <a class="btn btn-danger"
+                                    href="{{ url_for('diger-islemler.ogrenci_sil', ogrenci_id=ogrenci_listesi[ogrenci].OgrenciID, token=token) }}">Sil</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <div class="modal fade" id="ogrenciEkleModal" tabindex="-1" aria-labelledby="ogrenciEkleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ogrenciEkleModalLabel">Öğrenci Ekle</h5>
+                                <button type="button" class="btn-close" data-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Öğrenci Ekleme Formu -->
+                                <form method="post" action="{{ url_for('diger-islemler.ogrenci_ekle',token=token) }}">
+                                    <input type="hidden" name="token" value="{{ token }}">
+                                    <div class="mb-3">
+                                        <label for="ogrenciNo" class="form-label">Öğrenci No:</label>
+                                        <input type="text" class="form-control" id="ogrenciNo" name="ogrenciNo"
+                                            required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Ekle</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    {% endfor %}
+
+    </tbody>
+</table>
+
+
+    </div>
+</div>
+{% endblock %}

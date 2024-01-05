@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Öğrenci Bilgi Sistemi</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/next-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfect-scrollbar.css') }}">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Bootswatch Flatly Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.6.0/flatly/bootstrap.min.css">
+
+    <!-- jQueryScript CSS -->
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="app">
+<div class="sidebar">
+    <div class="sidebar-inner">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center flex-nowrap">
+                <a class="sidebar-link text-decoration-none" href="#">
+                    <div class="d-flex align-items-center flex-nowrap">
+                        <div class="logo-sm">
+                            <div class="logo d-flex align-items-center justify-content-center">
+                                LOGO
+                            </div>
+                        </div>
+                        <div class="logo-text d-flex align-items-center justify-content-center">
+                            LOGO
+                        </div>
+                    </div>
+                </a>
+                <div class="">
+                    <div class="mobile-toggle sidebar-toggle">
+                        <a href="#" class="text-decoration-none">
+                            <i class="far fa-times-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu scrollable position-relative pt-3">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link wave-effect" href="anasayfa.html">
+          <span class="icon-holder">
+            <i class="fas fa-home"></i>
+          </span>
+                    <span class="title">Anasayfa</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link wave-effect" href="#">
+          <span class="icon-holder">
+            <i class="fas fa-folder-open"></i>
+          </span>
+                    <span class="title">Ders İşlemleri</span>
+                    <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="sidebar-link" href="#">Müfredat</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="#">Dönem Dersleri</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="#">Ders Programı</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="example.html">Ders Kayıt</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link wave-effect dropdown-toggle" href="#">
+          <span class="icon-holder">
+            <i class="fas fa-fingerprint"></i>
+          </span>
+                    <span class="title">Sınav İşlemleri</span>
+                    <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="sidebar-link" href="#">Sınav Takvimi</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="#">Sınav Notları</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+            <i class="fas fa-folder-plus"></i>
+          </span>
+                    <span class="title">Belgeler</span>
+                    <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="sidebar-link" href="#">Öğrenci Belgesi</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="#">Transkript</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+            <i class="fas fa-folder-open"></i>
+          </span>
+                    <span class="title">Diğer İşlemler</span>
+                    <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="sidebar-link" href="#">Özlük Bilgileri</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link" href="#">Mesajlar</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-wide">
+    <nav class="navbar navbar-expand navbar-light bg-light">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item active">
+                <a id="sidebar-toggle" class="sidebar-toggle nav-link" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Abdullah Elen</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">|</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Oturumu Kapat</a>
+            </li>
+        </ul>
+    </nav>
+
+
+    Belgeler
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Perfect Scrollbar JS -->
+    <script src="{{ url_for('static', filename='js/perfect-scrollbar.min.js') }}"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+            crossorigin="anonymous"></script>
+
+    <!-- Next Sidebar JS -->
+    <script src="{{ url_for('static', filename='js/next-sidebar.js') }}"></script>
+
+</div>
+</body>
+</html>

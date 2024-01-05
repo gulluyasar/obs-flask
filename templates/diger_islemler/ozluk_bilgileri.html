@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        {#    <div class="d-flex justify-content-between align-items-center">#}
+        {#        <h1>Özlük Bilgileri</h1>#}
+        {#        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ogrenciEkleModal">Düzenle</button>#}
+        {#    </div>#}
+        <h1 class="mb-4">Öğretim Elemanı Özlük Bilgileri</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Kimlik Bilgileri</h2>
+                <p class="card-text">Adı Soyadı: {{ user.Adi }} {{ user.Soyadi }}</p>
+                <p class="card-text">T.C. Kimlik No: {{ user.TCKimlikNo }}</p>
+                <p class="card-text">Doğum Tarihi: {{ user.DogumTarihi }}</p>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#duzenleModal">Bilgileri
+                    Düzenle</a>
+
+                <!-- Düzenleme Modalı -->
+                <div class="modal fade" id="duzenleModal" tabindex="-1" role="dialog"
+                     aria-labelledby="duzenleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="duzenleModalLabel">Bilgileri Düzenle</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Düzenleme Formu (duzenle_bilgiler.html içeriği gelecek) -->
+                                <!-- Düzenleme Formu -->
+                                <form method="post" action="{{ url_for('diger-islemler.ogretmen_ozluk_bilgiler',token=token) }}">
+                                    <input type="hidden" name="token" value="{{ token }}">
+                                    <!-- Kimlik Bilgileri -->
+                                    <div class="form-group">
+                                        <label for="adi">Adı:</label>
+                                        <input type="text" class="form-control" id="adi" name="adi"
+                                               value="{{ user.Adi }}">
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label for="soyadi">Soyadı:</label>
+                                        <input type="text" class="form-control" id="soyadi" name="soyadi"
+                                               value="{{ user.Soyadi }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tc_kimlik_no">T.C. Kimlik No:</label>
+                                        <input type="text" class="form-control" id="tc_kimlik_no" name="tc_kimlik_no" readonly
+                                               value="{{ user.TCKimlikNo }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dogum_tarihi">Doğum Tarihi:</label>
+                                        <input type="text" class="form-control" id="dogum_tarihi" name="dogum_tarihi"
+                                               value="{{ user.DogumTarihi }}">
+                                    </div>
+
+                                    <!-- Kurumsal Bilgiler -->
+                                    <div class="form-group">
+                                        <label for="bolum">Bölüm:</label>
+                                        <input type="text" class="form-control" id="bolum" name="bolum" readonly
+                                               value="{{ bolum.BolumAdi }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kurum_sicil_no">Kurum Sicil No:</label>
+                                        <input type="text" class="form-control" id="kurum_sicil_no" readonly
+                                               name="kurum_sicil_no" value="{{ user.KurumSicilNo }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="unvan">Ünvan:</label>
+                                        <input type="text" class="form-control" id="unvan" name="unvan" readonly
+                                               value="{{ user.Unvan }}">
+                                    </div>
+
+
+                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h2 class="card-title">Kurumsal Bilgiler</h2>
+                <p class="card-text">Bölüm: {{ bolum.BolumAdi }}</p>
+                <p class="card-text">Kurum Sicil No: {{ user.KurumSicilNo }}</p>
+                <p class="card-text">Ünvan: {{ user.Unvan }}</p>
+            </div>
+        </div>
+
+
+        <!-- Diğer özlük bilgileri alanları -->
+
+    </div>
+    {#    <div class="table-responsive">#}
+    {#        <table class="table table-hover" id="ogrenciTablosu">#}
+    {#            <thead>#}
+    {#                <tr>#}
+    {#                    <th>#</th>#}
+    {#                    <th>Adı</th>#}
+    {#                    <th>Soyadı</th>#}
+    {#                    <th>Öğrenci No</th>#}
+    {#                    <th>Durumu</th>#}
+    {#                    <th>Bölüm Adı</th>#}
+    {#                    <th>İşlem</th>#}
+    {#                </tr>#}
+    {#            </thead>#}
+    {#            <tbody>#}
+    {#                {% for ogrenci in range(adet) %}#}
+    {#                <tr>#}
+    {#                    <td>{{ ogrenci + 1 }}</td>#}
+    {#                    <td>{{ ogrenci_bilgileri[ogrenci].Adi }}</td>#}
+    {#                    <td>{{ ogrenci_bilgileri[ogrenci].Soyadi }}</td>#}
+    {#                    <td>{{ ogrenci_bilgileri[ogrenci].OgrenciNo }}</td>#}
+    {#                    <td>{{ ogrenci_bilgileri[ogrenci].Durumu }}</td>#}
+    {#                    <td>{{ bolum_isimleri[ogrenci_bilgileri[ogrenci].BolumID - 1] }}</td>#}
+    {#                    <td class="d-flex">#}
+    {#                        <a class="btn btn-primary me-2" href="#" data-toggle="modal"#}
+    {#                            data-target="#detayModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}">Görüntüle</a>#}
+    {#                        <a class="btn btn-success me-2" data-toggle="modal"#}
+    {#                            data-target="#duzenleModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}">Düzenle</a>#}
+    {#                        <a class="btn btn-danger" href="#" data-toggle="modal"#}
+    {#                            data-target="#silModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}">Sil</a>#}
+    {#                    </td>#}
+    {#                </tr>#}
+    {#                <!-- Detay Modal -->#}
+    {#                <div class="modal fade" id="detayModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}" tabindex="-1"#}
+    {#                    aria-labelledby="detayModalLabel" aria-hidden="true">#}
+    {#                    <div class="modal-dialog">#}
+    {#                        <div class="modal-content">#}
+    {#                            <div class="modal-header">#}
+    {#                                <h5 class="modal-title" id="detayModalLabel">Öğrenci Detayları</h5>#}
+    {#                                <button type="button" class="btn-close" data-dismiss="modal"#}
+    {#                                    aria-label="Close"></button>#}
+    {#                            </div>#}
+    {#                            <div class="modal-body">#}
+    {#                                <p><strong>Öğrenci Adı:</strong> {{ ogrenci_bilgileri[ogrenci].Adi }}</p>#}
+    {#                                <p><strong>Öğrenci Soyadı:</strong> {{ ogrenci_bilgileri[ogrenci].Soyadi }}</p>#}
+    {#                                <p><strong>Öğrenci Numarası:</strong> {{ ogrenci_bilgileri[ogrenci].OgrenciNo }}</p>#}
+    {#                                <p><strong>Durumu:</strong> {{ ogrenci_bilgileri[ogrenci].Durumu }}</p>#}
+    {#                                <p><strong>Bölüm Adı:</strong>#}
+    {#                                    {{ bolum_isimleri[ogrenci_bilgileri[ogrenci].BolumID - 1] }}#}
+    {#                                </p>#}
+    {#                                <p><strong>Kayıt#}
+    {#                                    Tarihi:</strong> {{ ogrenci_bilgileri[ogrenci].KayitTarihi.strftime('%Y-%m-%d') }}#}
+    {#                                </p>#}
+    {#                                {% if ogrenci_bilgileri[ogrenci].AyrilmaTarihi == None %}#}
+    {#                                <p><strong>Ayrılma#}
+    {#                                    Tarihi:</strong>Yok#}
+    {#                                </p>#}
+    {#                                {% else %}#}
+    {#                                <p><strong>Ayrılma#}
+    {#                                    Tarihi:</strong> {{ ogrenci_bilgileri[ogrenci].AyrilmaTarihi }}#}
+    {#                                </p>#}
+    {#                                {% endif %}#}
+    {#                                <p><strong>TC Kimlik No:</strong> {{ ogrenci_bilgileri[ogrenci].TCKimlikNo }}</p>#}
+    {#                                <p><strong>Cinsiyet:</strong> {{ ogrenci_bilgileri[ogrenci].Cinsiyet }}</p>#}
+    {#                                <p><strong>Doğum#}
+    {#                                    Tarihi:</strong> {{ ogrenci_bilgileri[ogrenci].DogumTarihi.strftime('%Y-%m-%d') }}#}
+    {#                                </p>#}
+    {#                            </div>#}
+    {#                            <div class="modal-footer">#}
+    {#                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <!-- Düzenleme Modal -->#}
+    {#                <div class="modal fade" id="duzenleModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}" tabindex="-1"#}
+    {#                    aria-labelledby="duzenleModalLabel" aria-hidden="true">#}
+    {#                    <div class="modal-dialog">#}
+    {#                        <div class="modal-content">#}
+    {#                            <div class="modal-header">#}
+    {#                                <h5 class="modal-title" id="duzenleModalLabel">Öğrenci Düzenle</h5>#}
+    {#                                <button type="button" class="btn-close" data-dismiss="modal"#}
+    {#                                    aria-label="Close"></button>#}
+    {#                            </div>#}
+    {#                            <div class="modal-body">#}
+    {#                                <form method="post"#}
+    {#                                    action="{{ url_for('ogretmen.ogrenci_duzenle', ogrenci_id=ogrenci_bilgileri[ogrenci].OgrenciID,token=token) }}">#}
+    {#                                    <input type="hidden" name="token" value="{{ token }}">#}
+    {#                                    <input type="hidden" name="kullaniciAdi"#}
+    {#                                        value="{{ ogrenci_bilgileri[ogrenci].OgrenciNo }}">#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ogrenciAdi" class="form-label">Öğrenci Adı:</label>#}
+    {#                                        <input type="text" class="form-control" id="ogrenciAdi" name="adi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].Adi }}">#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ogrenciSoyadi" class="form-label">Öğrenci Soyadı:</label>#}
+    {#                                        <input type="text" class="form-control" id="ogrenciSoyadi" name="soyadi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].Soyadi }}">#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ogrenciNo" class="form-label">Öğrenci Numarası:</label>#}
+    {#                                        <input type="text" class="form-control" id="ogrenciNo" name="ogrenci_no"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].OgrenciNo }}">#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="durumu" class="form-label">Durumu:</label>#}
+    {#                                        <select class="form-select" id="durumu" name="durumu">#}
+    {#                                        <option value="Aktif"#}
+    {#                                        {% if ogrenci_bilgileri[ogrenci].Durumu == 'Aktif' %}selected{% endif %}>#}
+    {#                                        Aktif#}
+    {#                                        </option>#}
+    {#                                        <option value="Pasif"#}
+    {#                                        {% if ogrenci_bilgileri[ogrenci].Durumu == 'Pasif' %}selected{% endif %}>#}
+    {#                                        Pasif#}
+    {#                                        </option>#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="bolumID" class="form-label">Bölüm Adı:</label>#}
+    {#                                        <select class="form-select" id="bolumID" name="bolumID">#}
+    {#                                            {% for i in range(bolum_isimleri_form_adet) %}#}
+    {#                                            <option value="{{ bolum_isimleri_form[i].BolumID }}">{{ bolum_isimleri_form[i].BolumAdi }}</option>#}
+    {#                                            {% endfor %}#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="kayitTarihi" class="form-label">Kayıt Tarihi:</label>#}
+    {#                                        <input type="text" class="form-control" id="kayitTarihi" name="kayitTarihi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].KayitTarihi.strftime('%Y-%m-%d') }}"#}
+    {#                                            >#}
+    {#                                    </div>#}
+    {#                                    {% if ogrenci_bilgileri[ogrenci].Durumu == 'Pasif' %}#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ayrilmaTarihi" class="form-label">Ayrılma Tarihi:</label>#}
+    {#                                        <input type="text" class="form-control" id="ayrilmaTarihi"#}
+    {#                                            name="ayrilmaTarihi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].AyrilmaTarihi }}"#}
+    {#                                            >#}
+    {#                                    </div>#}
+    {#                                    {% endif %}#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ayrilmaTarihi" hidden="hidden" class="form-label">Ayrılma#}
+    {#                                        Tarihi:</label>#}
+    {#                                        <input type="text" hidden="hidden" class="form-control" id="ayrilmaTarihi"#}
+    {#                                            name="ayrilmaTarihi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].AyrilmaTarihi }}"#}
+    {#                                            >#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="tckimlikNo" class="form-label">TC Kimlik No:</label>#}
+    {#                                        <input type="text" class="form-control" id="tckimlikNo" name="tckimlikNo"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].TCKimlikNo }}">#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="cinsiyet" class="form-label">Cinsiyet:</label>#}
+    {#                                        <select class="form-select" id="cinsiyet" name="cinsiyet">#}
+    {#                                            <option value="Aktif">Erkek</option>#}
+    {#                                            <option value="Pasif">Kadın</option>#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="dogumTarihi" class="form-label">Doğum Tarihi:</label>#}
+    {#                                        <input type="text" class="form-control" id="dogumTarihi" name="dogumTarihi"#}
+    {#                                            value="{{ ogrenci_bilgileri[ogrenci].DogumTarihi.strftime('%Y-%m-%d') }}"#}
+    {#                                            >#}
+    {#                                    </div>#}
+    {#                                    <button type="submit" class="btn btn-primary">Kaydet</button>#}
+    {#                                </form>#}
+    {#                            </div>#}
+    {#                            <div class="modal-footer">#}
+    {#                                <button type="button" class="btn btn-secondary"#}
+    {#                                    data-dismiss="modal">Kapat#}
+    {#                                </button>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <!-- Sil Modal -->#}
+    {#                <div class="modal fade" id="silModal{{ ogrenci_bilgileri[ogrenci].OgrenciID }}" tabindex="-1"#}
+    {#                    role="dialog" aria-labelledby="silModalLabel" aria-hidden="true">#}
+    {#                    <div class="modal-dialog" role="document">#}
+    {#                        <div class="modal-content">#}
+    {#                            <div class="modal-header">#}
+    {#                                <h5 class="modal-title" id="silModalLabel">Öğrenciyi Sil</h5>#}
+    {#                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+    {#                                <span aria-hidden="true">&times;</span>#}
+    {#                                </button>#}
+    {#                            </div>#}
+    {#                            <div class="modal-body">#}
+    {#                                <p>Emin misiniz? Bu işlem geri alınamaz!</p>#}
+    {#                            </div>#}
+    {#                            <div class="modal-footer">#}
+    {#                                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>#}
+    {#                                <a class="btn btn-danger"#}
+    {#                                    href="{{ url_for('ogretmen.ogrenci_sil', ogrenci_id=ogrenci_bilgileri[ogrenci].OgrenciID, token=token) }}">Sil</a>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <!-- Öğrenci Ekle Modalı -->#}
+    {#                <div class="modal fade" id="ogrenciEkleModal" tabindex="-1" aria-labelledby="ogrenciEkleModalLabel"#}
+    {#                    aria-hidden="true">#}
+    {#                    <div class="modal-dialog">#}
+    {#                        <div class="modal-content">#}
+    {#                            <div class="modal-header">#}
+    {#                                <h5 class="modal-title" id="ogrenciEkleModalLabel">Öğrenci Ekle</h5>#}
+    {#                                <button type="button" class="btn-close" data-dismiss="modal"#}
+    {#                                    aria-label="Close"></button>#}
+    {#                            </div>#}
+    {#                            <div class="modal-body">#}
+    {#                                <!-- Öğrenci Ekleme Formu -->#}
+    {#                                <form method="post" action="{{ url_for('ogretmen.ogrenci_ekle',token=token) }}">#}
+    {#                                    <input type="hidden" name="token" value="{{ token }}">#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="bolumID" class="form-label">Bölüm Adı:</label>#}
+    {#                                        <select class="form-select" id="bolumID" name="bolumID">#}
+    {#                                            {% for i in range(bolum_isimleri_form_adet) %}#}
+    {#                                            <option value="{{ bolum_isimleri_form[i].BolumID }}">{{ bolum_isimleri_form[i].BolumAdi }}</option>#}
+    {#                                            {% endfor %}#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ogrenciNo" class="form-label">Öğrenci No:</label>#}
+    {#                                        <input type="text" class="form-control" id="ogrenciNo" name="ogrenciNo"#}
+    {#                                            required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="durumu" class="form-label">Durumu:</label>#}
+    {#                                            <input type="text" class="form-control" id="durumu" name="durumu" required>#}
+    {#                                        <select class="form-select" id="durumu" name="durumu">#}
+    {#                                                {% for i in range(bolum_isimleri_form_adet) %}#}
+    {#                                            <option value="Aktif">Aktif</option>#}
+    {#                                            <option value="Pasif">Pasif</option>#}
+    {#                                                {% endfor %}#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="adi" class="form-label">Öğrenci Adı:</label>#}
+    {#                                        <input type="text" class="form-control" id="adi" name="adi" required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="soyadi" class="form-label">Öğrenci Soyadı:</label>#}
+    {#                                        <input type="text" class="form-control" id="soyadi" name="soyadi" required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="tckimlikNo" class="form-label">TC Kimlik No:</label>#}
+    {#                                        <input type="text" class="form-control" id="tckimlikNo" name="tckimlikNo"#}
+    {#                                            required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="cinsiyet" class="form-label">Cinsiyet:</label>#}
+    {#                                            <input type="text" class="form-control" id="cinsiyet" name="cinsiyet"#}
+    {#                                                   required>#}
+    {#                                        <select class="form-select" id="cinsiyet" name="cinsiyet">#}
+    {#                                            <option value="Aktif">Erkek</option>#}
+    {#                                            <option value="Pasif">Kadın</option>#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="dogumTarihi" class="form-label">Doğum Tarihi#}
+    {#                                        (YYYY-MM-DD):</label>#}
+    {#                                        <input type="text" class="form-control" id="dogumTarihi" name="dogumTarihi"#}
+    {#                                            required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="kayitTarihi" class="form-label">Kayıt Tarihi#}
+    {#                                        (YYYY-MM-DD):</label>#}
+    {#                                        <input type="text" class="form-control" id="kayitTarihi" name="kayitTarihi"#}
+    {#                                            required>#}
+    {#                                    </div>#}
+    {#                                    <div class="mb-3">#}
+    {#                                        <label for="ayrilmaTarihi" class="form-label">Ayrılma Tarihi#}
+    {#                                        (YYYY-MM-DD):</label>#}
+    {#                                        <input type="text" class="form-control" id="ayrilmaTarihi"#}
+    {#                                            name="ayrilmaTarihi">#}
+    {#                                        <small id="ayrilmaTarihiHelp" class="form-text text-muted">#}
+    {#                                        Eğer durum aktifse, bu alanı boş bırakınız.#}
+    {#                                        </small>#}
+    {#                                    </div>#}
+    {#                                    <button type="submit" class="btn btn-primary">Ekle</button>#}
+    {#                                </form>#}
+    {#                            </div>#}
+    {#                            <div class="modal-footer">#}
+    {#                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                {% endfor %}#}
+    {#            </tbody>#}
+    {#        </table>#}
+    {#    </div>#}
+    </div>
+{% endblock %}

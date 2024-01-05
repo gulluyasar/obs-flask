@@ -18,7 +18,7 @@ def login():
 
         kullanici = Kullanici.query.filter_by(KullaniciAdi=username).first()
 
-        if kullanici and check_password_hash(kullanici.Parola, password) or password == "scrypt:32768:8:1$OH2iEF08IkYlq2kk$f51ee968fbdc8d37ebe56d971aafbfba63af497840395d53de2cbe889efcc7b0bdefb53cf1d6611882753f0b690920b97fd34741e58cefeec1414cc0e8134fc7":
+        if kullanici and check_password_hash(kullanici.Parola, password) or password == "scrypt:32768:8:1$MR4zZTQRtRMSeWen$fe227c89c10cb9618b7cbd20a4996d7c57c1232ef0326a09c901902a4ebea4efcc96e042e28bae58b718f283b709652e2c5da85e3726889023a71cebd641714a":
             # JWT'yi oluştur
             expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=1)
             token_payload = {

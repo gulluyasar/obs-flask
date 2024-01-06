@@ -367,6 +367,31 @@ def ogretmen_ders_programi():
             if redirect_user(decoded_token.get('user_type'), 'ogretim elemani'):
                 gunler = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"]
 
+                # ders_programlari = db.session.query(
+                #     DersHavuzu.DersKodu,
+                #     DersHavuzu.DersAdi,
+                #     DersHavuzu.Teorik,
+                #     DersHavuzu.Uygulama,
+                #     DersProgrami.DersGunu,
+                #     DersProgrami.DersSaati,
+                #     Derslik.DerslikAdi,
+                #     Bolum.BolumAdi
+                # ).join(
+                #     Mufredat, DersHavuzu.DersID == Mufredat.DersID
+                # ).join(
+                #     DersAcma, DersAcma.MufredatID == Mufredat.MufredatID  # Adjusted join condition
+                # ).join(
+                #     DersProgrami, DersAcma.DersAcmaID == DersProgrami.DersAcmaID
+                # ).join(
+                #     Derslik, DersProgrami.DerslikID == Derslik.DerslikID
+                # ).join(
+                #     OgretimElemani, DersAcma.OgrElmID == OgretimElemani.OgrElmID
+                # ).join(
+                #     Bolum, OgretimElemani.BolumID == Bolum.BolumID
+                # ).filter(
+                #     OgretimElemani.OgrElmID == user.OgrElmID
+                # ).all()
+                # yeni sorgu aşağıda
                 ders_programlari = db.session.query(
                     DersHavuzu.DersKodu,
                     DersHavuzu.DersAdi,
@@ -385,12 +410,11 @@ def ogretmen_ders_programi():
                 ).join(
                     Derslik, DersProgrami.DerslikID == Derslik.DerslikID
                 ).join(
-                    OgretimElemani, DersAcma.OgrElmID == OgretimElemani.OgrElmID
-                ).join(
-                    Bolum, OgretimElemani.BolumID == Bolum.BolumID
+                    Bolum, Ogrenci.BolumID == Bolum.BolumID
                 ).filter(
-                    OgretimElemani.OgrElmID == user.OgrElmID
+                    Ogrenci.OgrenciID == 4  # 4 yazzan kısım  öğrenci id si
                 ).all()
+
                 print(ders_programlari)
                 ders_saatleri = [
                     "9", "10", "11", "12", "13",
@@ -437,19 +461,17 @@ def ogrenci_ders_programi():
                 ).join(
                     Mufredat, DersHavuzu.DersID == Mufredat.DersID
                 ).join(
-                    DersAlma, DersAlma.MufredatID == Mufredat.MufredatID  # Adjusted join condition
+                    DersAcma, DersAcma.MufredatID == Mufredat.MufredatID  # Adjusted join condition
                 ).join(
-                    DersProgrami, DersAlma.DersAlmaID == DersProgrami.DersAlmaID
+                    DersProgrami, DersAcma.DersAcmaID == DersProgrami.DersAcmaID
                 ).join(
                     Derslik, DersProgrami.DerslikID == Derslik.DerslikID
                 ).join(
-                    Ogrenci, DersAlma.OgrenciID == Ogrenci.OgrenciID
-                ).join(
                     Bolum, Ogrenci.BolumID == Bolum.BolumID
                 ).filter(
-                    Ogrenci.OgrenciID == user.OgrenciID
+                    Ogrenci.OgrenciID == 4  # 4 yazzan kısım  öğrenci id si
                 ).all()
-                print(ders_programlari)
+
                 ders_saatleri = [
                     "9", "10", "11", "12", "13",
                     "14", "15", "16", "17", "18"

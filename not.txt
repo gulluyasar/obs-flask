@@ -1,0 +1,15 @@
+bence;
+~ özlük bilgilerinde danışmanın unavını da görünmesi gerektiğini daha güzel olacağını düşünüyorum istersen ekleyebilirsin
+
+! bölüm müfredat sayfası açıldığında akademik yıllar bilgisi tabloda görüntülenmiyor
+! hoca öğrencinin kayıtlı olduğu yıla ait (Akademik
+! Yıl) esaslı ders bilgilerinin getirilmesi gerekir. bu şekilde ifade etmiş bana mantıklı gelmiyor şuanlık
+! sen üstteki hatayı çözebilirsin burayı hocaya soralım öğrenci sadece kayıtlı olduğu yılın derslerini mi görmeli yoksa
+! 4 yıllık mı diye soralım
+
+! dönem dersleri tablosunda verileri kontrol etmedim filtreleme doğruysa burada doğrudur o tablonun şuanda 2024-2025
+! için çalışıyor olması lazım
+
+! EN KARIŞIK SORGU DERS PROGRAMI SORGUSU, BUNU YAZMAK İÇİN ÖĞRETMENDEN YARDIM ALABİLİRSİN. HTML ŞABLONUNU DA BAKARAK
+! YAZMANI TAVSİYE EDERİM HOCANIN EN ÇOK BEĞENDİ TABLO BUYDU
+

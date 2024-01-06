@@ -150,11 +150,22 @@ def ogrenci_mufredat_goruntule():
                         # Mufredat.AkademikYil == selected_akademik_yil
                         # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
                     ).all()
+                    ogrenci_id = user.OgrenciID
+                    mufredat = Mufredat.query \
+                        .join(Ogrenci, Ogrenci.BolumID == Mufredat.BolumID) \
+                        .filter(Ogrenci.OgrenciID == ogrenci_id) \
+                        .add_columns(Mufredat.AkademikYil.label("AkademikYil")) \
+                        .first()
+                    akademik_yil_filtre = mufredat.AkademikYil
+
+
+
+
 
 
 
                     return render_template('ders_islemleri/ogrenci_mufredat_goruntule.html', user=user, token=token,
-                                           decoded_token=decoded_token, bolum_mufredat=course_info)
+                                           decoded_token=decoded_token, bolum_mufredat=course_info, akademik = akademik_yil_filtre)
                 else:
                     return redirect(url_for('giris-ekrani.login'))
             except jwt.ExpiredSignatureError:

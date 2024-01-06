@@ -13,4 +13,12 @@ with app.app_context():
 
 
     ogretmen_adi = danismanlik_bilgileri.OgretmenAdi
-    print(ogretmen_adi)
+    
+    ogrenci_id = 2
+    mufredat = Mufredat.query \
+        .join(Ogrenci, Ogrenci.BolumID == Mufredat.BolumID) \
+        .filter(Ogrenci.OgrenciID == ogrenci_id) \
+        .add_columns(Mufredat.AkademikYil.label("AkademikYil"))\
+        .first()
+    akademik_yil_filtre= mufredat.AkademikYil
+    print(akademik_yil_filtre)

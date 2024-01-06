@@ -120,7 +120,117 @@ def mufredat_goruntule():
                 return redirect(url_for('giris-ekrani.login'))
         else:
             return redirect(url_for('giris-ekrani.login'))
+@ders_islemleri_blueprint.route('/ogrenci_mufredat_goruntule', methods=['GET', 'POST'])
+def ogrenci_mufredat_goruntule():
+    token = request.args.get('token')
+    if request.method == 'GET':
+        if token:
+            try:
+                decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+                user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
 
+                if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
+                    # selected_akademik_yil = request.form.get('filterAkademikYil')
+                    # Öğrencinin kayıtlı olduğu bölümdeki müfredat derslerini al
+                    course_info = db.session.query(
+                        DersHavuzu.DersKodu,
+                        DersHavuzu.DersAdi,
+                        DersHavuzu.DersTuru,
+                        Mufredat.DersDonemi,
+                        DersHavuzu.Teorik,
+                        DersHavuzu.Uygulama,
+                        DersHavuzu.Kredi,
+                        DersHavuzu.ECTS,
+                        Mufredat.AkademikYil
+                    ).join(
+                        Mufredat,
+                        DersHavuzu.DersID == Mufredat.DersID,
+                    ).filter(
+                        Mufredat.BolumID == user.BolumID,
+                        # Mufredat.AkademikYil == selected_akademik_yil
+                        # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
+                    ).all()
+
+
+
+                    return render_template('ders_islemleri/ogrenci_mufredat_goruntule.html', user=user, token=token,
+                                           decoded_token=decoded_token, bolum_mufredat=course_info)
+                else:
+                    return redirect(url_for('giris-ekrani.login'))
+            except jwt.ExpiredSignatureError:
+                # Token süresi dolmuş
+                return redirect(url_for('giris-ekrani.login'))
+            except jwt.InvalidTokenError:
+                # Geçersiz token
+                return redirect(url_for('giris-ekrani.login'))
+        else:
+            return redirect(url_for('giris-ekrani.login'))
+    if request.method == 'POST':
+        if token:
+            try:
+                decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+                user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+
+                if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
+
+                    selected_akademik_yil = request.form.get('filterAkademikYil')
+                    if selected_akademik_yil == 'all':
+
+                        course_info = db.session.query(
+                            DersHavuzu.DersKodu,
+                            DersHavuzu.DersAdi,
+                            DersHavuzu.DersTuru,
+                            Mufredat.DersDonemi,
+                            DersHavuzu.Teorik,
+                            DersHavuzu.Uygulama,
+                            DersHavuzu.Kredi,
+                            DersHavuzu.ECTS,
+                            Mufredat.AkademikYil
+                        ).join(
+                            Mufredat,
+                            DersHavuzu.DersID == Mufredat.DersID
+                        ).filter(
+                            Mufredat.BolumID == user.BolumID,  # ?ogretmene ozel olması için?
+
+                        ).all()
+
+                        return render_template('ders_islemleri/ogrenci_mufredat_goruntule.html', user=user, token=token,
+                                               decoded_token=decoded_token, bolum_mufredat=course_info)
+                    else:
+
+                        course_info = db.session.query(
+                            DersHavuzu.DersKodu,
+                            DersHavuzu.DersAdi,
+                            DersHavuzu.DersTuru,
+                            Mufredat.DersDonemi,
+                            DersHavuzu.Teorik,
+                            DersHavuzu.Uygulama,
+                            DersHavuzu.Kredi,
+                            DersHavuzu.ECTS,
+                            Mufredat.AkademikYil
+                        ).join(
+                            Mufredat,
+                            DersHavuzu.DersID == Mufredat.DersID
+                        ).filter(
+                            Mufredat.BolumID == user.BolumID,
+                            Mufredat.AkademikYil == selected_akademik_yil
+                            # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
+                        ).all()
+
+                        return render_template('ders_islemleri/ogrenci_mufredat_goruntule.html', user=user, token=token,
+                                               decoded_token=decoded_token, bolum_mufredat=course_info)
+
+                    # return render_template('ders_islemleri/mufredat_goruntule.html', user=user, token=token, decoded_token=decoded_token, bolum_mufredat=bolum_mufredat)
+                else:
+                    return redirect(url_for('giris-ekrani.login'))
+            except jwt.ExpiredSignatureError:
+                # Token süresi dolmuş
+                return redirect(url_for('giris-ekrani.login'))
+            except jwt.InvalidTokenError:
+                # Geçersiz token
+                return redirect(url_for('giris-ekrani.login'))
+        else:
+            return redirect(url_for('giris-ekrani.login'))
 
 @ders_islemleri_blueprint.route('/ogretmen_donem_dersler_goruntule')
 def donem_dersler_goruntule():
@@ -176,6 +286,59 @@ def donem_dersler_goruntule():
     else:
         return redirect(url_for('giris-ekrani.login'))
 
+@ders_islemleri_blueprint.route('/ogrenci_donem_dersler_goruntule')
+def ogrenci_donem_dersler_goruntule():
+    token = request.args.get('token')
+    if token:
+        try:
+
+            decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+            user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+            simdi = datetime.now()
+            # Yılı al
+            suanki_yil = simdi.year
+            donem = f"{suanki_yil}-{suanki_yil + 1}"
+            print(donem)
+
+            if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
+                # selected_akademik_yil = request.form.get('filterAkademikYil')
+                # Öğrencinin kayıtlı olduğu bölümdeki müfredat derslerini al
+
+                course_info = db.session.query(
+                    DersHavuzu.DersKodu,
+                    DersHavuzu.DersAdi,
+                    DersHavuzu.DersTuru,
+                    Mufredat.DersDonemi,
+                    DersHavuzu.Teorik,
+                    DersHavuzu.Uygulama,
+                    DersHavuzu.Kredi,
+                    DersHavuzu.ECTS,
+                    Mufredat.AkademikYil
+                ).join(
+                    Mufredat,
+                    DersHavuzu.DersID == Mufredat.DersID,
+                ).filter(
+                    Mufredat.BolumID == user.BolumID,
+                    Mufredat.AkademikYil == donem
+                    # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
+                ).all()
+                print(course_info)
+                bolum = Bolum.query.filter_by(BolumID=user.BolumID).first()
+                bolum_adi = bolum.BolumAdi
+                print()
+
+                return render_template('ders_islemleri/ogrenci_donem_dersler_goruntule.html', user=user, token=token,
+                                       decoded_token=decoded_token, bolum_mufredat=course_info, bolum_adi=bolum_adi)
+            else:
+                return redirect(url_for('giris-ekrani.login'))
+        except jwt.ExpiredSignatureError:
+            # Token süresi dolmuş
+            return redirect(url_for('giris-ekrani.login'))
+        except jwt.InvalidTokenError:
+            # Geçersiz token
+            return redirect(url_for('giris-ekrani.login'))
+    else:
+        return redirect(url_for('giris-ekrani.login'))
 
 @ders_islemleri_blueprint.route('/ogretmen_ders_programi')
 def ogretmen_ders_programi():
@@ -235,7 +398,64 @@ def ogretmen_ders_programi():
             return redirect(url_for('giris-ekrani.login'))
     else:
         return redirect(url_for('giris-ekrani.login'))
+@ders_islemleri_blueprint.route('/ogrenci_ders_programi')
+def ogrenci_ders_programi():
+    token = request.args.get('token')
+    if token:
+        try:
 
+            decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+            user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+            simdi = datetime.now()
+            # Yılı al
+            suanki_yil = simdi.year
+            donem = f"{suanki_yil}-{suanki_yil + 1}"
+
+            if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
+                gunler = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"]
+
+                ders_programlari = db.session.query(
+                    DersHavuzu.DersKodu,
+                    DersHavuzu.DersAdi,
+                    DersHavuzu.Teorik,
+                    DersHavuzu.Uygulama,
+                    DersProgrami.DersGunu,
+                    DersProgrami.DersSaati,
+                    Derslik.DerslikAdi,
+                    Bolum.BolumAdi
+                ).join(
+                    Mufredat, DersHavuzu.DersID == Mufredat.DersID
+                ).join(
+                    DersAlma, DersAlma.MufredatID == Mufredat.MufredatID  # Adjusted join condition
+                ).join(
+                    DersProgrami, DersAlma.DersAlmaID == DersProgrami.DersAlmaID
+                ).join(
+                    Derslik, DersProgrami.DerslikID == Derslik.DerslikID
+                ).join(
+                    Ogrenci, DersAlma.OgrenciID == Ogrenci.OgrenciID
+                ).join(
+                    Bolum, Ogrenci.BolumID == Bolum.BolumID
+                ).filter(
+                    Ogrenci.OgrenciID == user.OgrenciID
+                ).all()
+                print(ders_programlari)
+                ders_saatleri = [
+                    "9", "10", "11", "12", "13",
+                    "14", "15", "16", "17", "18"
+                ]
+                return render_template('ders_islemleri/ogrenci_ders_programi.html', ders_programlari=ders_programlari,user=user, token=token,ders_saatleri=ders_saatleri,
+                                       decoded_token=decoded_token,gunler=gunler)
+
+            else:
+                return redirect(url_for('giris-ekrani.login'))
+        except jwt.ExpiredSignatureError:
+            # Token süresi dolmuş
+            return redirect(url_for('giris-ekrani.login'))
+        except jwt.InvalidTokenError:
+            # Geçersiz token
+            return redirect(url_for('giris-ekrani.login'))
+    else:
+        return redirect(url_for('giris-ekrani.login'))
 
 
 @ders_islemleri_blueprint.route('/ogretmen_ders_kayit')
@@ -247,6 +467,64 @@ def ogretmen_ders_kayit_goruntule():
             decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
             user = OgretimElemani.query.filter_by(KullaniciID=decoded_token['user_id']).first()
             if redirect_user(decoded_token.get('user_type'), 'ogretim elemani'):
+                courses_taught = DersAcma.query.filter_by(OgrElmID=user.OgrElmID).all()
+
+                # Prepare a dictionary to store course and student information
+                courses_taught = (
+                    db.session.query(DersAcma, DersHavuzu)
+                    .join(Mufredat, DersAcma.MufredatID == Mufredat.MufredatID)
+                    .join(DersHavuzu, Mufredat.DersID == DersHavuzu.DersID)
+                    .filter(DersAcma.OgrElmID == 11)
+                    .all()
+                )
+
+                # Prepare a dictionary to store course and student information
+                course_student_info = {}
+
+                for course, ders_havuzu in courses_taught:
+                    # Retrieve the list of students registered for each course
+                    students_registered = (
+                        db.session.query(Ogrenci, DersAlma)
+                        .join(DersAlma, Ogrenci.OgrenciID == DersAlma.OgrenciID)
+                        .filter(DersAlma.DersAcmaID == course.DersAcmaID)
+                        .all()
+                    )
+
+                    # Store course and student information in the dictionary
+                    course_student_info[course] = {
+                        'DersKodu': ders_havuzu.DersKodu,
+                        'DersAdi': ders_havuzu.DersAdi,
+                        'DersTuru': ders_havuzu.DersTuru,
+                        'Teorik': ders_havuzu.Teorik,
+                        'Uygulama': ders_havuzu.Uygulama,
+                        'Kredi': ders_havuzu.Kredi,
+                        'ECTS': ders_havuzu.ECTS,
+                        'students': students_registered
+                    }
+
+
+                return render_template('ders_islemleri/ders_kayitlari.html', user=user, token=token,
+                                       decoded_token=decoded_token, course_student_info=course_student_info)
+
+
+            else:
+                return redirect(url_for('giris-ekrani.login'))
+        except jwt.ExpiredSignatureError:
+            # Token süresi dolmuş
+            return redirect(url_for('giris-ekrani.login'))
+        except jwt.InvalidTokenError:
+            # Geçersiz token
+            return redirect(url_for('giris-ekrani.login'))
+    else:
+        return redirect(url_for('giris-ekrani.login'))
+def ogrenci_ders_kayit_goruntule():
+    token = request.args.get('token')
+    if token:
+        try:
+
+            decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+            user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+            if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
                 courses_taught = DersAcma.query.filter_by(OgrElmID=user.OgrElmID).all()
 
                 # Prepare a dictionary to store course and student information

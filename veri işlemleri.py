@@ -89,3 +89,5 @@ with app.app_context():
 #             print("Kullanıcı bulunamadı.")
 #     else:
 #         print("Öğrenci bulunamadı.")
+
+

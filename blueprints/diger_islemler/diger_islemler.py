@@ -85,7 +85,42 @@ def ogretmen_ozluk_bilgiler():
             return redirect(url_for('giris-ekrani.login'))
     else:
         return redirect(url_for('giris-ekrani.login'))
+@diger_islemler_blueprint.route('/ogrenci_ozluk_bilgiler', methods=['GET', 'POST'])
+def ogrenci_ozluk_bilgiler():
+    token = request.args.get('token')
 
+
+
+    if token:
+        # Handle GET request
+        try:
+            decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+            user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+
+            if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
+                danismanlik_bilgileri = Danismanlik.query \
+                    .join(OgretimElemani, OgretimElemani.OgrElmID == Danismanlik.OgrElmID) \
+                    .join(Ogrenci, Ogrenci.OgrenciID == Danismanlik.OgrenciID) \
+                    .filter(Ogrenci.OgrenciID == user.OgrenciID) \
+                    .add_columns(OgretimElemani.Adi.label("OgretmenAdi")) \
+                    .first()
+
+                ogretmen_adi = danismanlik_bilgileri.OgretmenAdi
+
+                bolum = Bolum.query.get(user.BolumID)
+
+                return render_template('diger_islemler/ogrenci_ozluk_bilgileri.html', bolum=bolum, token=token,
+                                       decoded_token=decoded_token, user=user, ogretmen=ogretmen_adi)
+            else:
+                return redirect(url_for('giris-ekrani.login'))
+        except jwt.ExpiredSignatureError:
+            # Token is expired
+            return redirect(url_for('giris-ekrani.login'))
+        except jwt.InvalidTokenError:
+            # Invalid token
+            return redirect(url_for('giris-ekrani.login'))
+    else:
+        return redirect(url_for('giris-ekrani.login'))
 
 @diger_islemler_blueprint.route('/ogretmen_danismanlik', methods=['GET', 'POST'])
 def ogretmen_danismanlik():

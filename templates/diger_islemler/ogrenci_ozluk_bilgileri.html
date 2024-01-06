@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-3">
         {#    <div class="d-flex justify-content-between align-items-center">#}
         {#        <h1>Özlük Bilgileri</h1>#}
         {#        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ogrenciEkleModal">Düzenle</button>#}
         {#    </div>#}
-        <h1 class="mb-4">Öğretim Elemanı Özlük Bilgileri</h1>
+        <h1 class="mb-4">Öğrenci Özlük Bilgileri</h1>
 
         <div class="card">
             <div class="card-body">
@@ -13,73 +13,9 @@
                 <p class="card-text">Adı Soyadı: {{ user.Adi }} {{ user.Soyadi }}</p>
                 <p class="card-text">T.C. Kimlik No: {{ user.TCKimlikNo }}</p>
                 <p class="card-text">Doğum Tarihi: {{ user.DogumTarihi }}</p>
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#duzenleModal">Bilgileri
-                    Düzenle</a>
-
-                <!-- Düzenleme Modalı -->
-                <div class="modal fade" id="duzenleModal" tabindex="-1" role="dialog"
-                     aria-labelledby="duzenleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="duzenleModalLabel">Bilgileri Düzenle</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Düzenleme Formu (duzenle_bilgiler.html içeriği gelecek) -->
-                                <!-- Düzenleme Formu -->
-                                <form method="post" action="{{ url_for('diger-islemler.ogretmen_ozluk_bilgiler',token=token) }}">
-                                    <input type="hidden" name="token" value="{{ token }}">
-                                    <!-- Kimlik Bilgileri -->
-                                    <div class="form-group">
-                                        <label for="adi">Adı:</label>
-                                        <input type="text" class="form-control" id="adi" name="adi"
-                                               value="{{ user.Adi }}">
-                                    </div>
-                                    <div class="form-group">
-
-                                        <label for="soyadi">Soyadı:</label>
-                                        <input type="text" class="form-control" id="soyadi" name="soyadi"
-                                               value="{{ user.Soyadi }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tc_kimlik_no">T.C. Kimlik No:</label>
-                                        <input type="text" class="form-control" id="tc_kimlik_no" name="tc_kimlik_no" readonly
-                                               value="{{ user.TCKimlikNo }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="dogum_tarihi">Doğum Tarihi:</label>
-                                        <input type="text" class="form-control" id="dogum_tarihi" name="dogum_tarihi"
-                                               value="{{ user.DogumTarihi }}">
-                                    </div>
-
-                                    <!-- Kurumsal Bilgiler -->
-                                    <div class="form-group">
-                                        <label for="bolum">Bölüm:</label>
-                                        <input type="text" class="form-control" id="bolum" name="bolum" readonly
-                                               value="{{ bolum.BolumAdi }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kurum_sicil_no">Kurum Sicil No:</label>
-                                        <input type="text" class="form-control" id="kurum_sicil_no" readonly
-                                               name="kurum_sicil_no" value="{{ user.KurumSicilNo }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="unvan">Ünvan:</label>
-                                        <input type="text" class="form-control" id="unvan" name="unvan" readonly
-                                               value="{{ user.Unvan }}">
-                                    </div>
 
 
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                </form>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -88,8 +24,14 @@
             <div class="card-body">
                 <h2 class="card-title">Kurumsal Bilgiler</h2>
                 <p class="card-text">Bölüm: {{ bolum.BolumAdi }}</p>
-                <p class="card-text">Kurum Sicil No: {{ user.KurumSicilNo }}</p>
-                <p class="card-text">Ünvan: {{ user.Unvan }}</p>
+                <p class="card-text">Öğrenci No: {{ user.OgrenciNo }}</p>
+                <p class="card-text">Durumu: {{ user.Durumu }}</p>
+                {% if user.Durumu == 'Pasif' %}
+                <p class="card-text">Ayrilma Tarihi: {{ user.AyrilmaTarihi }}</p>
+                {% endif %}
+                <p class="card-text">Kayıt Tarihi: {{ user.KayitTarihi }}</p>
+                <p class="card-text">Ayrılma Tarihi: {{ user.AyrilmaTarihi }}</p>
+                <p class="card-text">Danışman: {{ogretmen}}</p>
             </div>
         </div>
 

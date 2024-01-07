@@ -74,7 +74,7 @@
                                 <a class="sidebar-link" href="{{ url_for('ders-islemleri.ogrenci_ders_programi',token=token) }}">Ders Programı</a>
                             </li>
                             <li>
-                                <a class="sidebar-link" href="example.html">Ders Kayıt</a>
+                                <a class="sidebar-link" href="{{ url_for('ders-islemleri.ogrenci_ders_kayit_goruntule',token=token) }}">Ders Kayıt</a>
                             </li>
                         </ul>
                     </li>
@@ -93,7 +93,7 @@
                                 <a class="sidebar-link" href="{{ url_for('sinav-islemleri.ogrenci_sinav_takvimi',token=token) }}">Sınav Takvimi</a>
                             </li>
                             <li>
-                                <a class="sidebar-link" href="#">Sınav Notları</a>
+                                <a class="sidebar-link" href="{{ url_for('sinav-islemleri.ogrenci_sinav_notlari',token=token) }}">Sınav Notları</a>
                             </li>
                         </ul>
                     </li>

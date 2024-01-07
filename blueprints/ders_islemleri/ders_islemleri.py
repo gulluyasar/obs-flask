@@ -2,6 +2,8 @@ from datetime import datetime
 
 import jwt
 from flask import Flask, render_template, redirect, url_for, request, Blueprint
+from sqlalchemy.orm import aliased
+
 from views import app
 
 from models import Ogrenci, OgretimElemani, Mufredat, db, DersHavuzu, Bolum, DersProgrami, DersAcma, Derslik, DersAlma, \
@@ -315,6 +317,7 @@ def ogrenci_donem_dersler_goruntule():
                 # selected_akademik_yil = request.form.get('filterAkademikYil')
                 # Öğrencinin kayıtlı olduğu bölümdeki müfredat derslerini al
 
+
                 course_info = db.session.query(
                     DersHavuzu.DersKodu,
                     DersHavuzu.DersAdi,
@@ -336,10 +339,27 @@ def ogrenci_donem_dersler_goruntule():
                 print(course_info)
                 bolum = Bolum.query.filter_by(BolumID=user.BolumID).first()
                 bolum_adi = bolum.BolumAdi
-                print()
+                ogrenci = Ogrenci.query.get(user.OgrenciID)
+                ders_alma_query = (
+                    db.session.query(DersAlma, DersAcma, OgretimElemani)
+                    .join(DersAcma, DersAlma.DersAcmaID == DersAcma.DersAcmaID)
+                    .join(OgretimElemani, DersAcma.OgrElmID == OgretimElemani.OgrElmID)
+                    .filter(DersAlma.OgrenciID == user.OgrenciID)
+                    .add_columns(OgretimElemani.Adi.label("OgretmenAdi")) \
+                        .add_columns(OgretimElemani.Soyadi.label("OgretmenSoyadi")) \
+                        .add_columns(OgretimElemani.Unvan.label("OgretmenUnvani")) \
+                        .first()
+
+                )
+                ogretmen_adi = ders_alma_query.OgretmenAdi
+                ogretmen_soyadi = ders_alma_query.OgretmenSoyadi
+                ogretmen_unvan = ders_alma_query.OgretmenUnvani
+
+
+
 
                 return render_template('ders_islemleri/ogrenci_donem_dersler_goruntule.html', user=user, token=token,
-                                       decoded_token=decoded_token, bolum_mufredat=course_info, bolum_adi=bolum_adi)
+                                       decoded_token=decoded_token, bolum_mufredat=course_info, bolum_adi=bolum_adi, adi=ogretmen_adi, soyadi=ogretmen_soyadi, unvan= ogretmen_unvan)
             else:
                 return redirect(url_for('giris-ekrani.login'))
         except jwt.ExpiredSignatureError:
@@ -550,6 +570,7 @@ def ogretmen_ders_kayit_goruntule():
             return redirect(url_for('giris-ekrani.login'))
     else:
         return redirect(url_for('giris-ekrani.login'))
+@ders_islemleri_blueprint.route('/ogrenci_ders_kayit')
 def ogrenci_ders_kayit_goruntule():
     token = request.args.get('token')
     if token:
@@ -558,44 +579,39 @@ def ogrenci_ders_kayit_goruntule():
             decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
             user = Ogrenci.query.filter_by(KullaniciID=decoded_token['user_id']).first()
             if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
-                courses_taught = DersAcma.query.filter_by(OgrElmID=user.OgrElmID).all()
-
+                #courses_taught = DersAcma.query.filter_by(OgrElmID=user.OgrElmID).all()
                 # Prepare a dictionary to store course and student information
-                courses_taught = (
-                    db.session.query(DersAcma, DersHavuzu)
-                    .join(Mufredat, DersAcma.MufredatID == Mufredat.MufredatID)
-                    .join(DersHavuzu, Mufredat.DersID == DersHavuzu.DersID)
-                    .filter(DersAcma.OgrElmID == 11)
-                    .all()
-                )
+                simdi = datetime.now()
+                # Yılı al
+                suanki_yil = simdi.year
+                donem = f"{suanki_yil}-{suanki_yil + 1}"
+                print(donem)
 
-                # Prepare a dictionary to store course and student information
-                course_student_info = {}
-
-                for course, ders_havuzu in courses_taught:
-                    # Retrieve the list of students registered for each course
-                    students_registered = (
-                        db.session.query(Ogrenci, DersAlma)
-                        .join(DersAlma, Ogrenci.OgrenciID == DersAlma.OgrenciID)
-                        .filter(DersAlma.DersAcmaID == course.DersAcmaID)
-                        .all()
-                    )
-
-                    # Store course and student information in the dictionary
-                    course_student_info[course] = {
-                        'DersKodu': ders_havuzu.DersKodu,
-                        'DersAdi': ders_havuzu.DersAdi,
-                        'DersTuru': ders_havuzu.DersTuru,
-                        'Teorik': ders_havuzu.Teorik,
-                        'Uygulama': ders_havuzu.Uygulama,
-                        'Kredi': ders_havuzu.Kredi,
-                        'ECTS': ders_havuzu.ECTS,
-                        'students': students_registered
-                    }
+                course_info = db.session.query(
+                    DersHavuzu.DersKodu,
+                    DersHavuzu.DersAdi,
+                    DersHavuzu.DersTuru,
+                    Mufredat.DersDonemi,
+                    DersHavuzu.Teorik,
+                    DersHavuzu.Uygulama,
+                    DersHavuzu.Kredi,
+                    DersHavuzu.ECTS,
+                    Mufredat.AkademikYil
+                ).join(
+                    Mufredat,
+                    DersHavuzu.DersID == Mufredat.DersID,
+                ).filter(
+                    Mufredat.BolumID == user.BolumID,
+                    Mufredat.AkademikYil == donem
+                    # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
+                ).all()
+                print(course_info)
+                bolum = Bolum.query.filter_by(BolumID=user.BolumID).first()
+                bolum_adi = bolum.BolumAdi
 
 
-                return render_template('ders_islemleri/ders_kayitlari.html', user=user, token=token,
-                                       decoded_token=decoded_token, course_student_info=course_student_info)
+                return render_template('ders_islemleri/ogrenci_ders_kayit.html', user=user, token=token,
+                                       decoded_token=decoded_token, course_info=course_info)
 
 
             else:

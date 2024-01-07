@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Öğrenci Sınav Notlari</h1>
+
+     {% if sinav %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Ders Adı</th>
+          <th>Sınav Türü</th>
+          <th>Etki Oranı</th>
+          <th>Sınav Notu</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sinavlar in sinav %}
+        <tr>
+          <td>{{ sinavlar.DersKodu }} - {{ sinavlar.DersAdi }}</td>
+          <td>{{ sinavlar.SinavTuru }}</td>
+          <td>{{ sinavlar.EtkiOrani }}</td>
+          <td>{{ sinavlar.SinavNotu }}</td>
+
+
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sınav bulunamadı.</p>
+  {% endif %}
+
+
+
+
+
+
+    </div>
+
+    </div>
+{% endblock %}

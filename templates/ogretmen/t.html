@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Transkripti</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table-container th, .table-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .table-container th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Öğrenci Transkripti
+    </div>
+    <div class="info">
+        <strong>Adı Soyadı:</strong> {{ data.name }}<br>
+        <strong>T.C. Kimlik No:</strong> {{ data.tc_id }}<br>
+        <strong>Öğrenci No:</strong> {{ data.student_id }}<br>
+        <strong>Bölüm / Program:</strong> {{ data.program }}<br>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sınav ID</th>
+                    <th>Sınav Notu</th>
+                    <th>Harf Notu</th>
+                    <!-- Diğer sütun başlıkları eklenebilir -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for sinav in data.data %}
+                    <tr>
+                        <td>{{ sinav.SinavID }}</td>
+                        <td>{{ sinav.SinavNotu }}</td>
+                        <td>{{ sinav.HarfNotu }}</td>
+                        <!-- Diğer sütun değerleri eklenebilir -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

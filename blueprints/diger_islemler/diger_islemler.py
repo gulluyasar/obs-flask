@@ -44,8 +44,9 @@ def ogretmen_ozluk_bilgiler():
         try:
             decoded_token = jwt.decode(token, app.secret_key, algorithms=['HS256'])
             user = OgretimElemani.query.filter_by(KullaniciID=decoded_token['user_id']).first()
+            bolum = Bolum.query.get(user.BolumID)
             if redirect_user(decoded_token.get('user_type'), 'ogretim elemani'):
-                bolum = Bolum.query.get(user.BolumID)
+
 
                 user.Adi = request.form['adi']
                 user.Soyadi = request.form['soyadi']
@@ -85,6 +86,8 @@ def ogretmen_ozluk_bilgiler():
             return redirect(url_for('giris-ekrani.login'))
     else:
         return redirect(url_for('giris-ekrani.login'))
+
+
 @diger_islemler_blueprint.route('/ogrenci_ozluk_bilgiler', methods=['GET', 'POST'])
 def ogrenci_ozluk_bilgiler():
     token = request.args.get('token')
@@ -149,16 +152,19 @@ def ogretmen_danismanlik():
             user = OgretimElemani.query.filter_by(KullaniciID=decoded_token['user_id']).first()
 
             if redirect_user(decoded_token.get('user_type'), 'ogretim elemani'):
-
-                danismanlik_listesi = Danismanlik.query.filter_by(OgrElmID=user.OgrElmID).all()
                 ogrenci_listesi = []
                 bolum_listesi = []
+                try:
+                    danismanlik_listesi = Danismanlik.query.filter_by(OgrElmID=user.OgrElmID).all()
 
-                for danismanlik in danismanlik_listesi:
-                    ogrenci = Ogrenci.query.filter_by(OgrenciID=danismanlik.OgrenciID).first()
-                    bolum = Bolum.query.filter_by(BolumID=ogrenci.BolumID).first()
-                    ogrenci_listesi.append(ogrenci)
-                    bolum_listesi.append(bolum)
+
+                    for danismanlik in danismanlik_listesi:
+                        ogrenci = Ogrenci.query.filter_by(OgrenciID=danismanlik.OgrenciID).first()
+                        bolum = Bolum.query.filter_by(BolumID=ogrenci.BolumID).first()
+                        ogrenci_listesi.append(ogrenci)
+                        bolum_listesi.append(bolum)
+                except:pass
+
                 return render_template('diger_islemler/ogretmen_danismanlik.html', user=user, token=token,
                                        decoded_token=decoded_token, ogrenci_listesi=ogrenci_listesi,bolum_listesi=bolum_listesi,adet=len(ogrenci_listesi))
             else:

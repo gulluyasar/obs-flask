@@ -581,37 +581,77 @@ def ogrenci_ders_kayit_goruntule():
             if redirect_user(decoded_token.get('user_type'), 'ogrenci'):
                 #courses_taught = DersAcma.query.filter_by(OgrElmID=user.OgrElmID).all()
                 # Prepare a dictionary to store course and student information
-                simdi = datetime.now()
-                # Yılı al
-                suanki_yil = simdi.year
-                donem = f"{suanki_yil}-{suanki_yil + 1}"
-                print(donem)
+                current_academic_year = "2024-2025"
+                current_academic_semester = "Guz"
+                active_student = Ogrenci.query.filter_by(OgrenciID=user.OgrenciID, Durumu="Aktif").first()
+                # from datetime import date
+                if active_student:
+                    # Query the database to find the curriculum (mufredat) for the active student's program
+                    curriculum = Mufredat.query.filter_by(BolumID=active_student.BolumID).first()
+                    curriculum
+                    if curriculum:
+                        # Query the database to find the courses in the current academic year and semester
+                        active_student_courses = DersAcma.query.join(Mufredat).filter(
+                            Mufredat.MufredatID == curriculum.MufredatID,
+                            DersAcma.AkademikYil == current_academic_year,
+                            DersAcma.AkademikDonem == current_academic_semester
+                        ).all()
+                        course_info_list = []
 
-                course_info = db.session.query(
-                    DersHavuzu.DersKodu,
-                    DersHavuzu.DersAdi,
-                    DersHavuzu.DersTuru,
-                    Mufredat.DersDonemi,
-                    DersHavuzu.Teorik,
-                    DersHavuzu.Uygulama,
-                    DersHavuzu.Kredi,
-                    DersHavuzu.ECTS,
-                    Mufredat.AkademikYil
-                ).join(
-                    Mufredat,
-                    DersHavuzu.DersID == Mufredat.DersID,
-                ).filter(
-                    Mufredat.BolumID == user.BolumID,
-                    Mufredat.AkademikYil == donem
-                    # Add conditions if needed, e.g., filtering by BolumID or AkademikYil
-                ).all()
-                print(course_info)
-                bolum = Bolum.query.filter_by(BolumID=user.BolumID).first()
-                bolum_adi = bolum.BolumAdi
+                        for course in active_student_courses:
+                            ders = DersHavuzu.query.get(course.DersAcmaID)
+                            ogretmen = OgretimElemani.query.get(course.OgrElmID)
+                            course_info = {
+                                "AkademikYil": course.AkademikYil,
+                                "DersAcmaID": course.DersAcmaID,
+                                "AkademikDonem": course.AkademikDonem,
+                                "MufredatID": course.MufredatID,
+                                "Kontenjan": course.Kontenjan,
+                                "OgrElmID": course.OgrElmID,
+                                "DersKodu": ders.DersKodu,
+                                "DersAdi": ders.DersAdi,
+                                "DersTuru": ders.DersTuru,
+                                "Teorik": ders.Teorik,
+                                "Uygulama": ders.Uygulama,
+                                "Kredi": ders.Kredi,
+                                "ECTS": ders.ECTS,
+                                "OgrAdi": f"{ogretmen.Unvan} {ogretmen.Adi} {ogretmen.Soyadi}"
+                            }
+                return []
+                from datetime import date
+                ogrenci_id = user.OgrenciID
+                # Example usage:
+                available_courses = get_active_student_courses(ogrenci_id)
+
+                for course in available_courses:
+                    mufredat = Mufredat.query.filter_by(MufredatID=course.MufredatID).first()
+                    ogretmen = OgretimElemani.query.filter_by(OgrElmID=course.OgrElmID).first()
+                    ders = DersHavuzu.query.filter_by(DersID=mufredat.DersID).first()
+
+                    print(f"AkademikYil: {course.AkademikYil},\n "
+                          f"DersAcmaID:{course.DersAcmaID},\n"
+                          f"AkademikDonem:{course.AkademikDonem},\n"
+                          f"MufredatID:{course.MufredatID},\n"
+                          f"Kontenjan:{course.Kontenjan},\n "
+                          f"OgrElmID:{course.OgrElmID}\n",
+                          "---- Diğer Bilgiler -----\n"
+                          f"Dersin Kodu:{ders.DersKodu}\n",
+                          f"Dersin Adı:{ders.DersAdi}\n",
+                          f"Dersin Türü:{ders.DersTuru}\n",
+                          f"Teorik:{ders.Teorik}\n",
+                          f"Uygulama:{ders.Uygulama}\n",
+                          f"Kredi:{ders.Kredi}\n",
+                          f"ECTS:{ders.ECTS}\n",
+
+                          f"OgrAdi:{ogretmen.Unvan} {ogretmen.Adi} {ogretmen.Soyadi}\n",
+                          "***********************"
+                          )
+
+
 
 
                 return render_template('ders_islemleri/ogrenci_ders_kayit.html', user=user, token=token,
-                                       decoded_token=decoded_token, course_info=course_info)
+                                       decoded_token=decoded_token, course_info=active_student_courses)
 
 
             else:

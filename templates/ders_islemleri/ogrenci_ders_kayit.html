@@ -139,11 +139,11 @@ $(document).ready(function () {
                 </tr>
             </thead>
             <tbody>
-    {% for course, courses_info in course_info.items() %}
+    {% for course, courses_info in course_student_info %}
 
             <tr>
                 <td>{{ loop.index }}</td>
-                <td>{{ courses_info[6] }}</td>
+                <td>{{ courses_info.DersKodu }}</td>
                 <td>{{ courses_info.DersAdi }}</td>
                 <td>{{ courses_info.DersTuru }}</td>
                 <td>{{ courses_info.Teorik }}</td>

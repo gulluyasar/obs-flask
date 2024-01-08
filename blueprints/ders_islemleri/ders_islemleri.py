@@ -588,7 +588,6 @@ def ogrenci_ders_kayit_goruntule():
                 if active_student:
                     # Query the database to find the curriculum (mufredat) for the active student's program
                     curriculum = Mufredat.query.filter_by(BolumID=active_student.BolumID).first()
-                    curriculum
                     if curriculum:
                         # Query the database to find the courses in the current academic year and semester
                         active_student_courses = DersAcma.query.join(Mufredat).filter(
@@ -599,8 +598,9 @@ def ogrenci_ders_kayit_goruntule():
                         course_info_list = []
 
                         for course in active_student_courses:
-                            ders = DersHavuzu.query.get(course.DersAcmaID)
-                            ogretmen = OgretimElemani.query.get(course.OgrElmID)
+                            mufredat = Mufredat.query.filter_by(MufredatID=course.MufredatID).first()
+                            ogretmen = OgretimElemani.query.filter_by(OgrElmID=course.OgrElmID).first()
+                            ders = DersHavuzu.query.filter_by(DersID=mufredat.DersID).first()
                             course_info = {
                                 "AkademikYil": course.AkademikYil,
                                 "DersAcmaID": course.DersAcmaID,
@@ -617,45 +617,14 @@ def ogrenci_ders_kayit_goruntule():
                                 "ECTS": ders.ECTS,
                                 "OgrAdi": f"{ogretmen.Unvan} {ogretmen.Adi} {ogretmen.Soyadi}"
                             }
-                return []
-                from datetime import date
-                ogrenci_id = user.OgrenciID
-                # Example usage:
-                available_courses = get_active_student_courses(ogrenci_id)
 
-                for course in available_courses:
-                    mufredat = Mufredat.query.filter_by(MufredatID=course.MufredatID).first()
-                    ogretmen = OgretimElemani.query.filter_by(OgrElmID=course.OgrElmID).first()
-                    ders = DersHavuzu.query.filter_by(DersID=mufredat.DersID).first()
-
-                    print(f"AkademikYil: {course.AkademikYil},\n "
-                          f"DersAcmaID:{course.DersAcmaID},\n"
-                          f"AkademikDonem:{course.AkademikDonem},\n"
-                          f"MufredatID:{course.MufredatID},\n"
-                          f"Kontenjan:{course.Kontenjan},\n "
-                          f"OgrElmID:{course.OgrElmID}\n",
-                          "---- Diğer Bilgiler -----\n"
-                          f"Dersin Kodu:{ders.DersKodu}\n",
-                          f"Dersin Adı:{ders.DersAdi}\n",
-                          f"Dersin Türü:{ders.DersTuru}\n",
-                          f"Teorik:{ders.Teorik}\n",
-                          f"Uygulama:{ders.Uygulama}\n",
-                          f"Kredi:{ders.Kredi}\n",
-                          f"ECTS:{ders.ECTS}\n",
-
-                          f"OgrAdi:{ogretmen.Unvan} {ogretmen.Adi} {ogretmen.Soyadi}\n",
-                          "***********************"
-                          )
-
-
-
+                            course_info_list.append(course_info)
 
                 return render_template('ders_islemleri/ogrenci_ders_kayit.html', user=user, token=token,
-                                       decoded_token=decoded_token, course_info=active_student_courses)
+                                       decoded_token=decoded_token, course_info_list=course_info_list)
 
 
-            else:
-                return redirect(url_for('giris-ekrani.login'))
+
         except jwt.ExpiredSignatureError:
             # Token süresi dolmuş
             return redirect(url_for('giris-ekrani.login'))

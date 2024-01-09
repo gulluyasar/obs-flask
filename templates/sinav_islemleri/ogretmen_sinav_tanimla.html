@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5 align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+        <h1> Öğretim Elemanı Sınav Tanımla</h1>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sinavEkleModal">Sınav
+        Ekle
+        </button>
+    </div>
+
+     {% if exams %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Ders Adı</th>
+          <th>Sınav Türü</th>
+          <th>Tarih</th>
+          <th>Saat</th>
+          <th>Etki Orani</th>
+          <th>Derslik</th>
+          <th>Öğretim Elemanı</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exams %}
+        <tr>
+          <td>{{ exam.DersKodu }} - {{ exam.DersAdi }}</td>
+          <td>{{ exam.SinavTuru }}</td>
+          <td>{{ exam.SinavTarihi }}</td>
+          <td>{{ exam.SinavSaati.strftime('%H:%M') }}</td>
+            <td>{{ exam.EtkiOrani }}</td>
+          <td>{{ exam.DerslikID }}</td>
+          <td>{{ user.Adi }} {{ user.Soyadi }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sınav bulunamadı.</p>
+  {% endif %}
+
+
+
+
+
+
+    </div>
+    <!-- Öğrenci Ekle Modalı -->
+                <div class="modal fade" id="sinavEkleModal" tabindex="-1" aria-labelledby="sinavEkleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sinavEkleModalLabel">Öğrenci Ekle</h5>
+                                <button type="button" class="btn-close" data-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Sınav Ekleme Formu -->
+                                <form method="post" action="{{ url_for('sinav_islemleri.sinav_ekle',token=token) }}">
+                                    <input type="hidden" name="token" value="{{ token }}">
+                                    <div class="mb-3">
+                                        <label for="dersID" class="form-label">Ders Adı:</label>
+                                        <select class="form-select" id="dersID" name="dersID">
+                                            {% for i in range(ders_isimleri_form_adet) %}
+                                            <option value="{{ ders_isimleri_form[i].DersID }}">{{ ders_isimleri_form[i].DersAdi }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sinavTuru" class="form-label">Sınav Türü:</label>
+                                        <input type="text" class="form-control" id="sinavTuru" name="sinavTuru"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="etkiOrani" class="form-label">Etki Oranı:</label>
+                                        {#                                            <input type="text" class="form-control" id="etkiOrani" name="etkiOrani" required>#}
+                                        <select class="form-select" id="etkiOrani" name="etkiOrani">
+                                            {#                                                {% for i in range(bolum_isimleri_form_adet) %}#}
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Pasif">Pasif</option>
+                                            {#                                                {% endfor %}#}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sinavTarihi" class="form-label">Sınav Tarihi:</label>
+                                        <input type="text" class="form-control" id="sinavTarihi" name="sinavTarihi" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sinavSaati" class="form-label">Sınav Saati:</label>
+                                        <input type="text" class="form-control" id="sinavSaati" name="sinavSaati" required>
+                                    </div>
+
+
+
+                                    <div class="mb-3">
+                                        <label for="ayrilmaTarihi" class="form-label">Ayrılma Tarihi
+                                        (YYYY-MM-DD):</label>
+                                        <input type="text" class="form-control" id="ayrilmaTarihi"
+                                            name="ayrilmaTarihi">
+                                        <small id="ayrilmaTarihiHelp" class="form-text text-muted">
+                                        Eğer durum aktifse, bu alanı boş bırakınız.
+                                        </small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Ekle</button>
+                                </form>
+                            </div>
+                       <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    </div>
+{% endblock %}

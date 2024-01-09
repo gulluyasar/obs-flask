@@ -156,7 +156,7 @@ $(document).ready(function () {
                     <td>{% if ders_alma.Durum == 'Basarili' %}
                         Onaylandı
                     <div class="btn-group">
-                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#onaylaModal{{ ders_alma.DersAlmaID }}">Reddet</a>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#reddetModal{{ ders_alma.DersAlmaID }}">Reddet</a>
                 <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#bekletModal{{ ders_alma.DersAlmaID }}">Beklet</a>
             </div>
                     {% elif ders_alma.Durum == 'Basarisiz' %}
